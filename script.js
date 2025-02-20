@@ -13,6 +13,7 @@ tg.CloudStorage.getItem("albums", (err, data) => {
 
 document.getElementById('createAlbumBtn').addEventListener('click', createAlbum);
 document.getElementById('shareAppBtn').addEventListener('click', shareApp);
+document.getElementById('faqBtn').addEventListener('click', openFAQ);
 
 function createAlbum() {
     const albumName = prompt("Введите название альбома:");
@@ -92,37 +93,27 @@ function renderAlbums() {
         albumDiv.className = 'album';
         albumDiv.innerHTML = `
             <h2 class="album-title" onclick="renameAlbum('${albumName}')">${albumName}</h2>
-            <span class="edit-icon" onclick="renameAlbum('${albumName}')">✏️</span>
+            <span class="edit-icon" onclick="renameAlbum('${albumName}')">📝</span>
             <button onclick="renderAlbum('${albumName}')">Открыть</button>
             <button onclick="addStep('${albumName}')">Добавить шаг</button>
-            <button onclick="deleteAlbum('${albumName}')">🗑</button>
+            <button class="delete-album-btn" onclick="deleteAlbum('${albumName}')">🗑</button>
         `;
         albumsDiv.appendChild(albumDiv);
     }
-    
-    // Добавляем кнопку "Создать альбом" внизу списка
-    const createButton = document.createElement('button');
-    createButton.textContent = "Создать альбом";
-    createButton.onclick = createAlbum;
-    albumsDiv.appendChild(createButton);
 }
 
 function renderAlbum(albumName) {
     const albumsDiv = document.getElementById('albums');
     albumsDiv.innerHTML = `<h2>${albumName}</h2><button onclick="renderAlbums()">Назад</button>`;
 
-    if (albums[albumName].length === 0) {
-        albumsDiv.innerHTML += `<button onclick="addStep('${albumName}')">Добавить шаг</button>`;
-    }
+    const addStepBtn = document.createElement('button');
+    addStepBtn.textContent = "Добавить шаг";
+    addStepBtn.onclick = () => addStep(albumName);
+    albumsDiv.appendChild(addStepBtn);
 
     albums[albumName].forEach((step, index) => {
         const stepDiv = document.createElement('div');
         stepDiv.className = 'step';
-        stepDiv.draggable = true;
-        stepDiv.ondragstart = (e) => { e.dataTransfer.setData('index', index); };
-        stepDiv.ondragover = (e) => { e.preventDefault(); };
-        stepDiv.ondrop = (e) => { reorderSteps(albumName, index, e.dataTransfer.getData('index')); };
-
         stepDiv.innerHTML = `
             <img src="${step.image}" alt="Шаг ${index + 1}">
             <span class="step-caption">${step.caption}</span>
@@ -133,11 +124,56 @@ function renderAlbum(albumName) {
     });
 }
 
-function reorderSteps(albumName, newIndex, oldIndex) {
-    let moved = albums[albumName].splice(oldIndex, 1)[0];
-    albums[albumName].splice(newIndex, 0, moved);
-    saveAlbums();
-    renderAlbum(albumName);
+function openFAQ() {
+    const faqContent = `
+        <h2>Как правильно пользоваться приложением?</h2>
+        <p>📌 <b>Что это за приложение?</b></p>
+        <p>Это визуальное расписание, которое помогает детям с аутизмом и их родителям планировать день.</p>
+        
+        <p>📌 <b>Как создать альбом?</b></p>
+        <p>Нажмите «Создать альбом», введите название и выберите эмоджи.</p>
+        
+        <p>📌 <b>Как добавить шаг?</b></p>
+        <p>Откройте альбом, нажмите «Добавить шаг», введите подпись и загрузите фото.</p>
+        
+        <p>📌 <b>Как отмечать выполненные задачи?</b></p>
+        <p>Отмечайте выполненные шаги галочками ☑️.</p>
+
+        <p>📌 <b>Как удалить альбом или шаг?</b></p>
+        <p>Нажмите 🗑 рядом с элементом.</p>
+
+        <p>📌 <b>Как поделиться расписанием?</b></p>
+        <p>Выберите альбом и нажмите «Поделиться».</p>
+
+        <p>📌 <b>Где хранятся данные?</b></p>
+        <p>Все данные хранятся в облаке Telegram (CloudStorage), не пропадают.</p>
+
+        <p>📌 <b>Как связаться с разработчиком?</b></p>
+        <p>📩 Telegram: <a href="https://t.me/i_am_ptrck">@i_am_ptrck</a></p>
+        
+        <button onclick="closeFAQ()">Назад</button>
+    `;
+
+    const faqDiv = document.createElement('div');
+    faqDiv.id = "faqPage";
+    faqDiv.innerHTML = faqContent;
+    faqDiv.style.position = "fixed";
+    faqDiv.style.top = "0";
+    faqDiv.style.left = "0";
+    faqDiv.style.width = "100%";
+    faqDiv.style.height = "100%";
+    faqDiv.style.background = "#222";
+    faqDiv.style.color = "#fff";
+    faqDiv.style.padding = "20px";
+    faqDiv.style.overflowY = "scroll";
+    faqDiv.style.zIndex = "1000";
+
+    document.body.appendChild(faqDiv);
+}
+
+function closeFAQ() {
+    const faqDiv = document.getElementById("faqPage");
+    if (faqDiv) faqDiv.remove();
 }
 
 renderAlbums();
