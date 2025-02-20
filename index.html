@@ -19,6 +19,21 @@
             padding: 15px;
             border: 2px solid #555;
             margin: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .album-title {
+            flex-grow: 1;
+            font-size: 20px;
+            cursor: pointer;
+            text-align: left;
+        }
+        .edit-icon {
+            cursor: pointer;
+            color: #bbb;
+            font-size: 18px;
+            margin-left: 10px;
         }
         .step {
             background-color: #444;
@@ -28,6 +43,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            cursor: grab;
         }
         .step img {
             max-width: 100px;
@@ -72,6 +88,7 @@
     <h1>Визуальное расписание</h1>
     <button id="createAlbumBtn">Создать альбом</button>
     <div id="albums"></div>
+    <button id="shareAppBtn">Поделиться приложением</button>
 
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="script.js"></script>
