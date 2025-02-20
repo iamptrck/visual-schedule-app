@@ -7,51 +7,55 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
+            background-color: #222;
+            color: #fff;
             padding: 20px;
             margin: 0;
-        }
-        h1 {
             text-align: center;
-            color: #333;
-            margin-bottom: 20px;
         }
         .album {
-            background-color: #fff;
+            background-color: #333;
             border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin: 15px 0;
             padding: 15px;
-            border: 2px solid #ccc;
+            border: 2px solid #555;
+            margin: 10px 0;
         }
         .step {
+            background-color: #444;
+            padding: 10px;
+            border-radius: 8px;
+            margin: 10px 0;
             display: flex;
             align-items: center;
-            margin: 10px 0;
-            background-color: #f9f9f9;
-            border-radius: 8px;
-            padding: 10px;
-            border: 2px dashed #ddd;
+            justify-content: space-between;
         }
         .step img {
-            max-width: 120px;
-            margin-right: 15px;
+            max-width: 100px;
             border-radius: 5px;
-            border: 2px solid #ccc;
-        }
-        .step-number {
-            font-size: 28px;
-            color: #666;
-            margin-right: 15px;
-            font-weight: bold;
+            border: 2px solid #555;
+            margin-right: 10px;
+            cursor: pointer;
         }
         .step-caption {
-            font-size: 22px;
-            color: #333;
-            word-wrap: break-word;
+            font-size: 18px;
+            color: #ddd;
+            flex-grow: 1;
+            cursor: pointer;
+            text-align: left;
+        }
+        .step input[type="checkbox"] {
+            transform: scale(1.5);
+            margin: 0 10px;
+        }
+        .delete-btn {
+            background: none;
+            border: none;
+            color: red;
+            font-size: 20px;
+            cursor: pointer;
         }
         button {
-            padding: 12px 20px;
+            padding: 10px;
             background-color: #666;
             color: white;
             border: none;
@@ -66,7 +70,7 @@
 </head>
 <body>
     <h1>Визуальное расписание</h1>
-    <button onclick="createAlbum()">Создать альбом</button>
+    <button id="createAlbumBtn">Создать альбом</button>
     <div id="albums"></div>
 
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
