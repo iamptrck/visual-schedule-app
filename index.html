@@ -1,44 +1,75 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="ru">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2575.2">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Times; -webkit-text-stroke: #000000}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Times; -webkit-text-stroke: #000000; min-height: 14.0px}
-    span.s1 {font-kerning: none}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Визуальное расписание</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5; /* Светло-серый фон */
+            padding: 20px;
+            margin: 0;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .album {
+            background-color: #fff;
+            border-radius: 10px; /* Закруглённые углы, как пазл */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Лёгкая тень */
+            margin: 15px 0;
+            padding: 15px;
+            border: 2px solid #ccc; /* Серая окантовка */
+        }
+        .step {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            background-color: #f9f9f9; /* Ещё более светлый фон для шагов */
+            border-radius: 8px; /* Лёгкие закругления */
+            padding: 10px;
+            border: 2px dashed #ddd; /* Дашед линия, как пазл */
+        }
+        .step img {
+            max-width: 120px;
+            margin-right: 15px;
+            border-radius: 5px;
+            border: 2px solid #ccc;
+        }
+        .step-number {
+            font-size: 28px;
+            color: #666; /* Серый номер */
+            margin-right: 15px;
+            font-weight: bold;
+        }
+        .step-caption {
+            font-size: 22px;
+            color: #333;
+            word-wrap: break-word; /* Перенос длинных текстов */
+        }
+        button {
+            padding: 12px 20px;
+            background-color: #666; /* Тёмно-серый */
+            color: white;
+            border: none;
+            border-radius: 8px; /* Пазлообразные углы */
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #444; /* Ещё темнее при наведении */
+        }
+    </style>
 </head>
 <body>
-<p class="p1"><span class="s1">&lt;!DOCTYPE html&gt;</span></p>
-<p class="p1"><span class="s1">&lt;html lang="ru"&gt;</span></p>
-<p class="p1"><span class="s1">&lt;head&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;meta charset="UTF-8"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;title&gt;Визуальное расписание&lt;/title&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;style&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>body { font-family: Arial, sans-serif; background-color: #f0f0f0; padding: 10px; }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>h1 { text-align: center; color: #333; }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.album { margin: 10px; background-color: white; padding: 10px; border-radius: 5px; }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.step { display: flex; align-items: center; margin: 10px 0; }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.step img { max-width: 100px; margin-right: 10px; border: 2px solid #ccc; }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.step-number { font-size: 24px; color: #007bff; margin-right: 10px; }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.step-caption { font-size: 20px; color: #333; }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>button { padding: 10px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>button:hover { background-color: #0056b3; }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/style&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/head&gt;</span></p>
-<p class="p1"><span class="s1">&lt;body&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;h1&gt;Визуальное расписание&lt;/h1&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;button onclick="createAlbum()"&gt;Создать альбом&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;div id="albums"&gt;&lt;/div&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;script src="https://telegram.org/js/telegram-web-app.js"&gt;&lt;/script&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;script src="script.js"&gt;&lt;/script&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/body&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/html&gt;</span></p>
+    <h1>Визуальное расписание</h1>
+    <button onclick="createAlbum()">Создать альбом</button>
+    <div id="albums"></div>
+
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
