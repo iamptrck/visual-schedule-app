@@ -82,13 +82,40 @@
         button:hover {
             background-color: #444;
         }
+        #footer-buttons {
+            position: fixed;
+            bottom: 10px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        .faq-btn {
+            background-color: #444;
+            border: 2px solid #777;
+            padding: 10px;
+            border-radius: 8px;
+            color: white;
+        }
+        .delete-album-btn {
+            background-color: rgba(255, 0, 0, 0.2);
+            border: 2px solid red;
+            color: white;
+            border-radius: 8px;
+            padding: 10px;
+        }
     </style>
 </head>
 <body>
     <h1>Визуальное расписание</h1>
     <button id="createAlbumBtn">Создать альбом</button>
     <div id="albums"></div>
-    <button id="shareAppBtn">Поделиться приложением</button>
+
+    <div id="footer-buttons">
+        <button id="shareAppBtn" class="faq-btn">Поделиться приложением</button>
+        <button id="faqBtn" class="faq-btn">❓</button>
+    </div>
 
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="script.js"></script>
