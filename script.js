@@ -12,6 +12,7 @@ tg.CloudStorage.getItem("albums", (err, data) => {
 });
 
 document.getElementById('createAlbumBtn').addEventListener('click', createAlbum);
+document.getElementById('shareAppBtn').addEventListener('click', shareApp);
 
 function createAlbum() {
     const albumName = prompt("Введите название альбома:");
@@ -21,6 +22,16 @@ function createAlbum() {
         renderAlbums();
     } else {
         alert("Альбом уже существует или имя пустое!");
+    }
+}
+
+function renameAlbum(albumName) {
+    const newName = prompt("Введите новое название альбома:", albumName);
+    if (newName && newName !== albumName && !albums[newName]) {
+        albums[newName] = albums[albumName];
+        delete albums[albumName];
+        saveAlbums();
+        renderAlbums();
     }
 }
 
@@ -66,32 +77,6 @@ function toggleStepCompletion(albumName, index) {
     renderAlbum(albumName);
 }
 
-function editStepText(albumName, index) {
-    const newCaption = prompt("Редактировать подпись:", albums[albumName][index].caption);
-    if (newCaption !== null) {
-        albums[albumName][index].caption = newCaption;
-        saveAlbums();
-        renderAlbum(albumName);
-    }
-}
-
-function sendAlbum(albumName) {
-    const message = `📅 Визуальное расписание: ${albumName}\n\n` + 
-        albums[albumName].map((step, i) => `✅ ${i + 1}. ${step.caption}`).join("\n");
-
-    tg.showPopup({
-        title: "Отправка альбома",
-        message: "Выберите, кому отправить расписание",
-        buttons: [{ text: "Отправить в Telegram", id: "send" }]
-    });
-
-    tg.onEvent('popupClosed', (data) => {
-        if (data.button_id === "send") {
-            tg.sendData(JSON.stringify({ text: message }));
-        }
-    });
-}
-
 function saveAlbums() {
     tg.CloudStorage.setItem("albums", JSON.stringify(albums), (err) => {
         if (err) console.warn("Ошибка сохранения:", err);
@@ -106,26 +91,41 @@ function renderAlbums() {
         const albumDiv = document.createElement('div');
         albumDiv.className = 'album';
         albumDiv.innerHTML = `
-            <h2>${albumName}</h2>
+            <h2 class="album-title" onclick="renameAlbum('${albumName}')">${albumName}</h2>
+            <span class="edit-icon" onclick="renameAlbum('${albumName}')">✏️</span>
             <button onclick="renderAlbum('${albumName}')">Открыть</button>
             <button onclick="addStep('${albumName}')">Добавить шаг</button>
-            <button onclick="deleteAlbum('${albumName}')">Удалить альбом</button>
-            <button onclick="sendAlbum('${albumName}')">📤 Поделиться</button>
+            <button onclick="deleteAlbum('${albumName}')">🗑</button>
         `;
         albumsDiv.appendChild(albumDiv);
     }
+    
+    // Добавляем кнопку "Создать альбом" внизу списка
+    const createButton = document.createElement('button');
+    createButton.textContent = "Создать альбом";
+    createButton.onclick = createAlbum;
+    albumsDiv.appendChild(createButton);
 }
 
 function renderAlbum(albumName) {
     const albumsDiv = document.getElementById('albums');
     albumsDiv.innerHTML = `<h2>${albumName}</h2><button onclick="renderAlbums()">Назад</button>`;
 
+    if (albums[albumName].length === 0) {
+        albumsDiv.innerHTML += `<button onclick="addStep('${albumName}')">Добавить шаг</button>`;
+    }
+
     albums[albumName].forEach((step, index) => {
         const stepDiv = document.createElement('div');
         stepDiv.className = 'step';
+        stepDiv.draggable = true;
+        stepDiv.ondragstart = (e) => { e.dataTransfer.setData('index', index); };
+        stepDiv.ondragover = (e) => { e.preventDefault(); };
+        stepDiv.ondrop = (e) => { reorderSteps(albumName, index, e.dataTransfer.getData('index')); };
+
         stepDiv.innerHTML = `
-            <img src="${step.image}" alt="Шаг ${index + 1}" onclick="viewImage('${step.image}')">
-            <span class="step-caption" onclick="editStepText('${albumName}', ${index})">${step.caption}</span>
+            <img src="${step.image}" alt="Шаг ${index + 1}">
+            <span class="step-caption">${step.caption}</span>
             <input type="checkbox" ${step.completed ? "checked" : ""} onclick="toggleStepCompletion('${albumName}', ${index})">
             <button onclick="deleteStep('${albumName}', ${index})">🗑</button>
         `;
@@ -133,9 +133,11 @@ function renderAlbum(albumName) {
     });
 }
 
-function viewImage(src) {
-    const imgWindow = window.open();
-    imgWindow.document.write(`<img src="${src}" style="width:100%; height:auto;">`);
+function reorderSteps(albumName, newIndex, oldIndex) {
+    let moved = albums[albumName].splice(oldIndex, 1)[0];
+    albums[albumName].splice(newIndex, 0, moved);
+    saveAlbums();
+    renderAlbum(albumName);
 }
 
 renderAlbums();
