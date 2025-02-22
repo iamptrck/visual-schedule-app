@@ -3,11 +3,16 @@ tg.expand();
 
 let albums = {};
 
-// Загружаем данные из Telegram CloudStorage
+// Загружаем данные из CloudStorage и фиксируем ошибки
 tg.CloudStorage.getItem("albums", (err, data) => {
     if (!err && data) {
-        albums = JSON.parse(data);
-        renderAlbums();
+        try {
+            albums = JSON.parse(data);
+            renderAlbums();
+        } catch (e) {
+            console.error("Ошибка загрузки данных:", e);
+            albums = {};
+        }
     }
 });
 
@@ -79,9 +84,13 @@ function toggleStepCompletion(albumName, index) {
 }
 
 function saveAlbums() {
-    tg.CloudStorage.setItem("albums", JSON.stringify(albums), (err) => {
-        if (err) console.warn("Ошибка сохранения:", err);
-    });
+    try {
+        tg.CloudStorage.setItem("albums", JSON.stringify(albums), (err) => {
+            if (err) console.warn("Ошибка сохранения:", err);
+        });
+    } catch (e) {
+        console.error("Ошибка записи в CloudStorage:", e);
+    }
 }
 
 function renderAlbums() {
@@ -124,6 +133,14 @@ function renderAlbum(albumName) {
     });
 }
 
+function shareApp() {
+    try {
+        tg.openTelegramLink("https://t.me/share/url?url=https://t.me/YOUR_BOT_USERNAME&text=Попробуй%20это%20визуальное%20расписание%20для%20своих%20детей!");
+    } catch (e) {
+        console.error("Ошибка отправки ссылки:", e);
+    }
+}
+
 function openFAQ() {
     const faqContent = `
         <h2>Как правильно пользоваться приложением?</h2>
@@ -154,26 +171,11 @@ function openFAQ() {
         <button onclick="closeFAQ()">Назад</button>
     `;
 
-    const faqDiv = document.createElement('div');
-    faqDiv.id = "faqPage";
-    faqDiv.innerHTML = faqContent;
-    faqDiv.style.position = "fixed";
-    faqDiv.style.top = "0";
-    faqDiv.style.left = "0";
-    faqDiv.style.width = "100%";
-    faqDiv.style.height = "100%";
-    faqDiv.style.background = "#222";
-    faqDiv.style.color = "#fff";
-    faqDiv.style.padding = "20px";
-    faqDiv.style.overflowY = "scroll";
-    faqDiv.style.zIndex = "1000";
-
-    document.body.appendChild(faqDiv);
+    document.body.innerHTML = faqContent;
 }
 
 function closeFAQ() {
-    const faqDiv = document.getElementById("faqPage");
-    if (faqDiv) faqDiv.remove();
+    location.reload();
 }
 
 renderAlbums();
